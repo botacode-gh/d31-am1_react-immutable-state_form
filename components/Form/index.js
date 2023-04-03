@@ -1,8 +1,9 @@
-import { useState } from "react";
+// import { useState } from "react";
+import { useImmer } from "use-immer";
 import { StyledForm, StyledInputContainer } from "./Form.styled";
 
 export default function Form() {
-  const [mountain, setMountain] = useState({
+  const [mountain, updateMountain] = useImmer({
     name: "Mount Everest",
     values: {
       altitude: 8848,
@@ -10,11 +11,63 @@ export default function Form() {
     },
   });
 
-  function handleNameChange(event) {}
+  function handleNameChange(event) {
+    const nameInputValue = event.traget.value;
 
-  function handleAltitudeChange(event) {}
+    updateMountain((draft) => {
+      draft.name = nameInputValue;
+    });
+  }
 
-  function handleMountainRangeChange(event) {}
+  function handleAltitudeChange(event) {
+    const altitudeInputValue = +event.target.value;
+
+    if (altitudeInputValue >= 0 || altitudeInputValue === "Infinity") {
+      updateMountain((draft) => {
+        draft.values.altitude = altitudeInputValue;
+      });
+    }
+  }
+
+  function handleMountainRangeChange(event) {
+    const mountainRangeInputValue = event.target.value;
+
+    updateMountain((draft) => {
+      draft.values.mountainRange = mountainRangeInputValue;
+    });
+  }
+
+  //// native js way (don't forget to uncomment `import {useState}`!):
+  // function handleNameChange(event) {
+  //   updateMountain({
+  //     ...mountain,
+  //     name: event.target.value,
+  //   });
+  // }
+
+  // function handleAltitudeChange(event) {
+  //   const altitudeInputValue = +event.target.value;
+
+  //   if (altitudeInputValue >= 0 || altitudeInputValue === "Infinity") {
+  //     updateMountain({
+  //       ...mountain,
+  //       values: {
+  //         ...mountain.values,
+  //         altitude: altitudeInputValue,
+  //       },
+  //     });
+  //   }
+  // }
+
+  // function handleMountainRangeChange(event) {
+  //   updateMountain({
+  //     ...mountain,
+  //     values: {
+  //       ...mountain.values,
+  //       mountainRange: event.target.value,
+  //     },
+  //   });
+  // }
 
   return (
     <StyledForm>
